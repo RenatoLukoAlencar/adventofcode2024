@@ -1,50 +1,61 @@
-const fs = require('node:fs');
-const readline = require('node:readline');
+const fs = require("node:fs");
+const readline = require("node:readline");
 
 async function processLineByLine() {
-  const fileStream = fs.createReadStream('./files/day2.txt');
-
+  const fileStream = fs.createReadStream("./files/day2.txt");
   const rl = readline.createInterface({
     input: fileStream,
     crlfDelay: Infinity,
   });
-  // Note: we use the crlfDelay option to recognize all instances of CR LF
-  // ('\r\n') in input.txt as a single line break.
 
-  let safes = 0
-  let unsafes = 0
+  let safes = 0;
+  let unsafes = 0;
+
   for await (const line of rl) {
-    let s = line.split(" ").map(x => parseInt(x))
-    let sorted_asc = s.sort((a, b)=> a-b);
-    if(line == sorted_asc.join(" ")|| line == sorted_asc.reverse().join(" ")){
-        let safe = true
+    let arr = line.split(" ").map((x) => parseInt(x));
+    if (check(arr)) {
+      safes++;
+    } else {
+      let [new_safe, new_unsafe] = [0, 0];
 
-        for(var i = 0 ; i < s.length -1; i++){
-            let [a, b] = [s[i], s[i+1]]    
-            let diff = a - b
+      for (let i = 0; i < arr.length; i++) {
+        let test = arr.slice();
+        test.splice(i, 1);
 
-            if(diff > 3 || diff <-3 || diff == 0){
-                safe = false
-            } 
-        } 
+        check(test) ? new_safe++ : new_unsafe++;
+      }
 
-        if(safe){
-            safes++
-        }else{
-            unsafes++
-        }
-    }else{
-        unsafes++
-    }  
-}
-  return {safes, unsafes}
+      new_safe != 0 ? safes++ : unsafes++;
+    }
+  }
+  return { safes, unsafes };
 }
 
-function rethink(){
-    
+function check(s) {
+  let sorted_asc = s
+    .join()
+    .split(",")
+    .sort((a, b) => a - b);
+
+  if (
+    s.join(" ") === sorted_asc.join(" ") ||
+    s.join(" ") === sorted_asc.reverse().join(" ")
+  ) {
+    for (var i = 0; i < s.length - 1; i++) {
+      let [a, b] = [s[i], s[i + 1]];
+      let diff = a - b;
+
+      if (diff > 3 || diff < -3 || diff == 0) {
+        return false;
+      }
+    }
+  } else {
+    return false;
+  }
+
+  return true;
 }
 
-
-var c = processLineByLine().then(data => {
-    console.log("count? ", data)
-}); 
+processLineByLine().then((data) => {
+  console.log("count? ", data);
+});
