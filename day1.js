@@ -1,8 +1,5 @@
 var fs = require("node:fs");
 
-
-
-
 try{
     var data = fs.readFileSync("./files/day1.txt", "utf-8")
     var distance = 0;
