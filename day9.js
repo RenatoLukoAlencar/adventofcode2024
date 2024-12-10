@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 
 try {
-  let data = fs.readFileSync("./files/day9.txt", "utf-8").split("");
+  let data = fs.readFileSync("./files/day9_test.txt", "utf-8").split("");
   let disk = [];
   let id = 0;
   let onoff = 1;
@@ -29,6 +29,7 @@ try {
       for (let j = disk.length - 1; j > i; j--) {
         if (disk[j] != ".") {
           disk.splice(i, 1, disk.splice(j, 1, "."));
+          console.log(disk.join(""));
 
           break;
         }
