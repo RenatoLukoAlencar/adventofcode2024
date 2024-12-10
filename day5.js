@@ -1,11 +1,14 @@
 const fs = require("node:fs");
 
 try {
-  let data = fs.readFileSync("./files/day5.txt", "utf-8").split("\n");
+  let data = fs.readFileSync("./files/day5_one.txt", "utf-8").split("\n");
   let rules = {};
   let updates = [];
 
   let approved_updates = [];
+  let rejected_updates = [];
+  let corrected_updates = [];
+
   for (let line of data) {
     line = line.trim();
     if (line != "") {
@@ -22,9 +25,7 @@ try {
     }
   }
 
-  //console.log("rules: ", rules);
-
-  for (let update of updates) {
+  function check(update) {
     let pages_update = update.map((x) => parseInt(x));
 
     let approved = true;
@@ -40,12 +41,35 @@ try {
         }
       }
     }
+    return approved;
+  }
 
-    if (approved) {
+  function check_rules(update, page) {
+    let index = update.indexOf(page);
+    let success = true;
+
+    for (var r of rules[page]) {
+      if (update.indexOf(r) > -1) {
+        let r_index = update.indexOf(r);
+        if (index > r_index) {
+          success = false;
+        }
+      }
+    }
+    return success;
+  }
+
+  for (let update of updates) {
+    if (check(update)) {
       approved_updates.push(update);
+    } else {
+      console.log("update? ", update);
+      console.log(check_rules(update, update[2]));
     }
   }
   console.log("approved: ", approved_updates.length);
+  console.log("reproved: ", rejected_updates.length);
+  console.log("corrected:", corrected_updates.length);
 
   let middle_sum = 0;
 
@@ -55,7 +79,7 @@ try {
     );
   }
 
-  console.log("middle_sum: ", middle_sum);
+  console.log("approved_middle_sum: ", middle_sum);
 } catch (error) {
   console.error(error);
 }
