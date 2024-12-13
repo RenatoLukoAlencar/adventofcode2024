@@ -12,7 +12,7 @@ try {
 
   let loop_count = 0;
   let iteration_count = 0;
-  let max_iteration = 50000;
+  let max_iteration = 1500000;
 
   for (let omega of table.entries()) {
     for (let delta of omega[1].entries()) {
@@ -84,7 +84,7 @@ try {
         }
       }
 
-      if (count == max_iteration) {
+      if (!blocked) {
         loop_count++;
       }
       /*
