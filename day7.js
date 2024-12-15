@@ -10,9 +10,7 @@ try {
     let res = check(line);
     if (res.status) {
       possible.push(res.answer);
-    } else {
-      notPossible.push(res.answer);
-    }
+    } 
   }
 
   console.log("possible: ", possible);
